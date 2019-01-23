@@ -1,1 +1,1 @@
-Allocator.cpp - динамический аллокатор памяти [https://stepik.org/lesson/44328/step/9?auth=login&unit=22140]
+Allocator.cpp - РґРёРЅР°РјРёС‡РµСЃРєРёР№ Р°Р»Р»РѕРєР°С‚РѕСЂ РїР°РјСЏС‚Рё [https://stepik.org/lesson/44328/step/9?auth=login&unit=22140]
