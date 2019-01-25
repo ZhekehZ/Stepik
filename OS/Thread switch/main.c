@@ -17,8 +17,8 @@ struct switch_frame {
 	uint64_t rip;
 } __attribute__((packed)); 
 /*
-	__attribute__((packed)) - указание для gcc упаковать поля структуры с 
-	минимально возможным выравниванием
+  __attribute__((packed)) - указание для gcc упаковать поля структуры с 
+  минимально возможным выравниванием
 */
 
 /*Дескриптор потока*/
@@ -32,9 +32,9 @@ void switch_threads(struct thread *from, struct thread *to)
 	void __switch_threads(void **prev, void *next);
 
 	/*
-		Функция переключения описана в Switch.S
-		Принимает указатель на то, куда записать указатель на 
-			сохраненный контекст, и указатель на новый контест
+	  Функция переключения описана в Switch.S
+	  Принимает указатель на то, куда записать указатель на 
+	    сохраненный контекст, и указатель на новый контест
 	*/
 	__switch_threads(&from->context, to->context);
 }
@@ -45,7 +45,7 @@ struct thread *__create_thread(size_t stack_size, void (*entry)(void))
 {
 	/*После указателя на контекст будем хранить сам контекст*/
 	const size_t size = stack_size + sizeof(struct thread);
-	struct switch_frame frame;	//новый контекст
+	struct switch_frame frame; //новый контекст
 	struct thread *thread = malloc(size); //выделям место под дескриптор + контекст
 
 	if (!thread)
@@ -53,18 +53,18 @@ struct thread *__create_thread(size_t stack_size, void (*entry)(void))
 
 	memset(&frame, 0, sizeof(frame)); //обнуляем "регистры"
 	frame.rip = (uint64_t)entry; /*устанавливаем указатель на следующую инструкцию потока,
-									единственное поле в контексте, необходимое для запуска
-									нового потока*/
+					единственное поле в контексте, необходимое для запуска
+					нового потока*/
 
 	/*Как было сказано, контекст храним сразу после дескриптора*/
 	thread->context = (char *)thread + size - sizeof(frame); 
 	/*Копируем созданный контекст по адресу, указанному в дескрипторе*/
 	memcpy(thread->context, &frame, sizeof(frame));
 	/*
-			После предыдущей операции thread указывает на следующую сруктуру:
-			[context <free_space> rflags r15 r14 r13 r12 rbp rbx rip] 
-			где context указывает на ячейку памяти, с которой начинается rflags, 
-				то есть на вершину стека нового процесса
+	  После предыдущей операции thread указывает на следующую сруктуру:
+	  	[context <free_space> rflags r15 r14 r13 r12 rbp rbx rip] 
+	  где context указывает на ячейку памяти, с которой начинается rflags, 
+	    то есть на вершину стека нового процесса
 	*/
 	return thread;
 }
@@ -83,8 +83,8 @@ void destroy_thread(struct thread *thread)
 
 
 static struct thread _thread0; /*ткущий процесс
-								rip устанавливать не надо, так как он сам сохранится 
-								в случае вызова switch_threads*/
+				rip устанавливать не надо, так как он сам сохранится 
+				в случае вызова switch_threads*/
 static struct thread *thread[3]; 
 
 
