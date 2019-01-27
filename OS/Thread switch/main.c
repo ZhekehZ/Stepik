@@ -5,7 +5,7 @@
 #include <string.h>
 #include <stdio.h>
 
-/*Струксура, соответствующая контексту, описанному в Switch.S*/
+/*Структура, соответствующая контексту, описанному в Switch.S*/
 struct switch_frame {
 	uint64_t rflags;
 	uint64_t r15;
