@@ -1,4 +1,4 @@
-## [OS](https://stepik.org/course/1780)
+## [Операционные системы](https://stepik.org/course/1780)
 
 * [**Allocator**](https://github.com/ZhekehZ/Stepik/tree/master/OS/Allocator) 	-	[Динамический аллокатор памяти](https://stepik.org/lesson/44328/step/9)
 
