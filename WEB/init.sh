@@ -9,5 +9,6 @@ mkdir -p /home/box/web/uploads
 mkdir -p /home/box/web/etc
 
 BASEDIR=$(dirname "$0")
-sudo ln -fs "$(realpath "$BASEDIR")/nginx.conf"  /etc/nginx/sites-enabled/test.conf
-sudo /etc/init.d/nginx restart
+unlink /etc/nginx/sites-enabled/default
+ln -fs "$(realpath "$BASEDIR")/nginx.conf"  /etc/nginx/sites-enabled/test.conf
+/etc/init.d/nginx restart
