@@ -1,7 +1,7 @@
 def application(env, start_response):
     response = []
 
-    response.append(env['QUERY_STRING'].replace('&', '\n'))
+    response.append(bytes(env['QUERY_STRING'].replace('&', '\n'), 'ascii'))
 
     status = '200 OK'
     headers = [
