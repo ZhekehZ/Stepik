@@ -1,4 +1,4 @@
-package m01_BooleanType
+package m01_Bool
 
 import provingground.HoTT._
 import provingground.induction.TLImplicits._

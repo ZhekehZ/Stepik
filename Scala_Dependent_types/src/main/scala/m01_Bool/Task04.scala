@@ -1,18 +1,18 @@
-package m01_BooleanType
+package m01_Bool
 
 import provingground.HoTT._
 import provingground.induction.TLImplicits._
 import shapeless._
 
 //noinspection TypeAnnotation,DuplicatedCode
-object Task01 {
+object Task04 {
   val Bool = "Boolean" :: Type
   val b = "b" :: Bool
   val BoolInd = ("true" ::: Bool) |: ("false" ::: Bool) =: Bool
   val tru :: fls :: HNil = BoolInd.intros
-  val recBB = BoolInd.rec(Bool)
+  val recBBB = BoolInd.rec(Bool ->: Bool)
 
-  val or = b :-> recBB(tru)(b)
+  val or = recBBB(b :-> tru)(b :-> b)
 
   def main(args: Array[String]): Unit = {
     assert(or(tru)(tru) == tru)
