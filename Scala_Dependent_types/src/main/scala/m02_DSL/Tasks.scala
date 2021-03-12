@@ -73,6 +73,7 @@ object Tasks {
     val number :: negate :: add :: mult :: HNil = ExprInd.intros
   }
 
+  //noinspection DuplicatedCode
   def task07() {
     val A = "A" :: Type
     val List = "List" :: Type ->: Type
