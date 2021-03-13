@@ -70,7 +70,7 @@ object Task04 {
             v0 :-> (w0 :-> zero)) (
             n :~> (vscalarProdn :-> (vsn :-> (wsn :->
               add
-                (add (vhead (succ(n)) (vsn)) (vhead (succ(n)) (wsn)))
+                (mult (vhead (succ(n)) (vsn)) (vhead (succ(n)) (wsn)))
                 (vscalarProdn (vtail (succ(n)) (vsn)) (vtail (succ(n)) (wsn)))
               ))))
 
@@ -78,5 +78,7 @@ object Task04 {
     val vect1 = vcons(one)(one)(vcons(zero)(two)(vnil))
     val vect2 = vcons(one)(two)(vcons(zero)(three)(vnil))
     assert(vscalarProd(two)(vect1)(vect2) == eight)
+    assert(vscalarProd(zero)(vnil)(vnil) == zero)
+    assert(vscalarProd(one)(vcons(zero)(one)(vnil))(vcons(zero)(three)(vnil)) == three)
   }
 }

@@ -13,14 +13,14 @@ object Task02 {
     type Size <: Nat
   }
   case class HCons[H, T <: HList](head: H, tail: T) extends HList {
-    override type Size = Succ[tail.Size]
+    override type Size = Succ[T#Size]
   }
   case object HNil extends HList {
     override type Size = Zero
   }
   type HNil = HNil.type
 
-//  def main(args: Array[String]): Unit = {
-//    implicitly[HCons[Int, HCons[String, HCons[Boolean, HNil]]]# Size =:= Three]
-//  }
+  def main(args: Array[String]): Unit = {
+    implicitly[HCons[Int, HCons[String, HCons[Boolean, HNil]]]# Size =:= Three]
+  }
 }
