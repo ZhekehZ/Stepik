@@ -12,10 +12,7 @@ object Task01 {
 
   val p = "p" :: Sgma(a !: A, b ~>: C(a)(b))
 
-  val bC = "b->C(a)(b)" :: b ~>: C(a)(b)
-  val rec = Sgma(a !: A, b ~>: C(a)(b)).induc(a :~> (bC :-> (b ~>: Sgma(a !: A, C(a)(b)))))
-
-  val f = rec(a :~> (bC :-> (b :~> mkPair(a, bC(b)))))
+  val f = p :-> (b :~> mkPair(p.first, p.second(b)))
 
   def main(args: Array[String]): Unit = {
     f !: Sgma(a !: A, b ~>: C(a)(b)) ->: b ~>: Sgma(a !: A, C(a)(b))
