@@ -4,7 +4,7 @@ import provingground.HoTT._
 import provingground.induction.TLImplicits._
 import shapeless._
 
-//noinspection TypeAnnotation
+//noinspection TypeAnnotation,DuplicatedCode
 object Task07 {
   val Nat = "Nat" :: Type
   val NatInd = ("0" ::: Nat) |: ("succ" ::: Nat -->>: Nat) =: Nat
@@ -22,9 +22,9 @@ object Task07 {
   val eight = succ(seven)
   val nine = succ(eight)
 
-  val C = "C" :: Type
-  val c  = "c" :: C
-  val f = "f" :: Nat ->: C ->: C
+  val C = "C" :: Nat ->: Type
+  val c  = "c" :: C(zero)
+  val f = "f" :: n ~>: (C(n) ->: C(succ(n)) )
 
   val A = "A" :: Type
   val a = "a" :: A
@@ -37,28 +37,47 @@ object Task07 {
   val a3 = "a3" :: A
   val B = "B" :: Type
   val g = "g" :: A ->: B
-  //...
-//  map !: A ~>: a1 ~>: a2 ~>: (Id(A)(a1)(a2) ->: B ~>: g ~>: Id(B)(g(a1))(g(a2)) )
-//  trans !: A ~>: a1 ~>: a2 ~>: (Id(A)(a1)(a2) ->: a3 ~>: (Id(A)(a2)(a3) ->: Id(A)(a1)(a3) ))
-//
-//  val rec = "rec" :: C ~>: (C ->: (Nat ->: C ->: C) ->: Nat ->: C)
-//  val beta1 = "rec(c,f,0)=???" :: C ~>: c ~>: f ~>: Id(C)( rec(C)(c)(f)(zero) )(???)
-//  val beta2 = "rec(c,f,succ(n))=???" :: C ~>: c ~>: f ~>: n ~>: Id(C)( rec(C)(c)(f)(succ(n)) )(???)
-//
-//  val recNN = rec(Nat)
-//  val double = recNN(zero)(n :-> (m :-> succ(succ(m)) ))
-//
-//  val constSuccSucc = n :-> (m :-> succ(succ(m)))
-//  val double_0_eq_0 = beta1(Nat)(zero)(constSuccSucc) !: Id(Nat)( double(zero) )(zero)
-//  val double_1_eq_2 = trans(Nat)( double(one) )( succ(succ(double(zero))) )(
-//    beta2(Nat)(zero)(constSuccSucc)(zero)
-//  )(two)(
-//    map(Nat)( double(zero) )(zero)(double_0_eq_0)(Nat)( m :-> succ(succ(m)) )
-//  ) !: Id(Nat)( double(one) )(two)
-//  val double_2_eq_4 = trans(Nat)( double(two) )( succ(succ(double(one))) )(
-//    beta2(Nat)(zero)(constSuccSucc)(one)
-//  )(four)(
-//    map(Nat)( double(one) )(two)(double_1_eq_2)(Nat)( m :-> succ(succ(m)) )
-//  ) !: Id(Nat)( double(two) )(four)
 
+  val h = "h" :: A ->: B
+
+  val a1_eq_a2 = "a1 = a2" :: Id(A)(a1)(a2)
+  val ind_a1eqa2_fa1eqfa2 = IdInd.induc(A :~> (a1 :~> (a2 :~> (a1_eq_a2 :-> (B ~>: h ~>: Id(B)(h(a1))(h(a2)) )))))
+  val map = ind_a1eqa2_fa1eqfa2(A :~> (a :~> (B :~> (h :~> refl(B)(h(a)) ))))
+
+  val ind_a1eqa2_a2eqa3_a1eqa3 = IdInd.induc(A :~> (a1 :~> (a2 :~> (a1_eq_a2 :-> (a3 ~>: (Id(A)(a2)(a3) ->: Id(A)(a1)(a3) ))))))
+  val a_eq_a3 = "_ : a=a3" :: Id(A)(a)(a3)
+  val trans = ind_a1eqa2_a2eqa3_a1eqa3(A :~> (a :~> (a3 :~> (a_eq_a3 :-> a_eq_a3))))
+
+  map !: A ~>: a1 ~>: a2 ~>: (Id(A)(a1)(a2) ->: B ~>: h ~>: Id(B)(h(a1))(h(a2)) )
+  trans !: A ~>: a1 ~>: a2 ~>: (Id(A)(a1)(a2) ->: a3 ~>: (Id(A)(a2)(a3) ->: Id(A)(a1)(a3) ))
+
+  val ind = "ind" :: C ~>: (C(zero) ->: (n ~>: (C(n) ->: C(succ(n)) )) ->: n ~>: C(n) )
+  val beta1 = "ind(c,f,0)=???" :: C ~>: c ~>: f ~>: Id(C(zero))(ind(C)(c)(f)(zero))(c)
+  val beta2 = "ind(c,f,succ(n))=???" :: C ~>: c ~>: f ~>: n ~>: Id(C(succ(n)))(ind(C)(c)(f)(succ(n)))(
+    f(n)(ind(C)(c)(f)(n)))
+
+  val constNat = n :-> Nat
+  val recNN = ind(constNat)
+  val double = recNN(zero)(n :-> (m :-> succ(succ(m)) ))
+
+  val recNN0 = NatInd.rec(Nat)
+  val double0 = recNN0(zero)(n :-> (m :-> succ(succ(m)) ))
+
+  val constSuccSucc = n :-> (m :-> succ(succ(m)))
+  val double_0_eq_0 = beta1(constNat)(zero)(constSuccSucc) !: Id(Nat)( double(zero) )(zero)
+
+  val statement = n ~>: Id(Nat)(double(n))(double0(n))
+  val indStatement = ind(n :-> Id(Nat)(double(n))(double0(n)))
+  val hyp = "hyp" :: Id(Nat)(double(n))(double0(n))
+  val proof = indStatement(double_0_eq_0)(n :~> (hyp :->
+    trans(Nat)( double(succ(n)) )( succ(succ(double(n))) )(
+      beta2(constNat)(zero)(constSuccSucc)(n)
+    )(succ(succ(double0(n))))(
+      map(Nat)(double(n))(double0(n))(hyp)(Nat)( m :-> succ(succ(m)) )
+    )
+  ))
+
+  def main(args: Array[String]): Unit = {
+    proof !: statement
+  }
 }

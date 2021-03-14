@@ -4,7 +4,7 @@ import provingground.HoTT._
 import provingground.induction.TLImplicits._
 import shapeless._
 
-//noinspection TypeAnnotation
+//noinspection TypeAnnotation,DuplicatedCode
 object Task03 {
   val A = "A" :: Type
   val a = "a" :: A
